@@ -16,7 +16,6 @@ class Server
 public:
 	int _sock = INVALID_SOCKET;
 	set<int> _socks;
-
 	Server() = default;
 
 	int initSock() {
