@@ -6,9 +6,9 @@
 #include "Message.h"
 
 #pragma comment(lib,"ws2_32.lib")
-const char* SERVER_IP = "127.0.0.1";
-const short SERVER_PORT = 12345;
 
+extern const char* SERVER_IP;
+extern const short SERVER_PORT;
 class Client
 {
 	
