@@ -58,6 +58,7 @@ public:
 			Message* uq_message = (Message*)malloc(sizeof(Message) + header._size);
 			int ret2 = recv(sock, (char*)uq_message->data, header._size, 0);
 			if (ret1 <= 0 || ret2 <= 0) {
+				delete uq_message;
 				closesocket(sock);
 				_socks.erase(sock);
 				cout << "sock " << sock << " closed" << endl;

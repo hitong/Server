@@ -1,6 +1,7 @@
 #include "Client.h"
 const char* SERVER_IP = "127.0.0.1";
 const short SERVER_PORT = 12345;
+//const int CHCHE_SIZE = 10240;
 
 int Client::initSock()
 {
@@ -27,16 +28,31 @@ int Client::sendMessage(Header* header)
 
 Message* Client::recvMessage()
 {
-	Header header;
-	int ret = recv(_sock, (char*)&header, sizeof(header), 0);
-	if (ret <= 0) {
+	int nRead = recv(_sock, _chche, CHCHE_SIZE, 0);
+	if (nRead < 0) {
+		return nullptr;
+	} 
+	if (nRead == 0) {
+		closeConnect();
+		return nullptr;
+	}
+	memcpy(_chche2 + _posLast,_chche,nRead);
+	_posLast += nRead;
+	if (_posLast < sizeof(Header)) {
+		return nullptr;
+	}
+	Header* header = (Header*)_chche2;
+	if (header->_size + sizeof(Header) > _posLast) {
 		return nullptr;
 	}
 	//cout << header->_cmd << " " << header->_size << endl;
 	//if (header._cmd == MESSAGE) {
-	Message* uq_message = (Message*)malloc(sizeof(Message) + header._size);
-	recv(_sock, (char*)uq_message->data, header._size, 0);
-	memcpy(uq_message, &header, sizeof(Header));
+	Message* uq_message = (Message*)malloc(sizeof(Message) + header->_size);
+	memcpy(uq_message, &_chche2, sizeof(Header) + header->_size);
+	_posLast -= sizeof(Header) + header->_size;
+	if (_posLast) {
+		memcpy(_chche2, _chche2+ sizeof(Header) + header->_size, _posLast);
+	}
 	return uq_message;
 	//}
 

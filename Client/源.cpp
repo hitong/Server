@@ -18,7 +18,7 @@ int main() {
 		if (ret== nullptr) {
 			break;
 		}
-		delete ret;
+		free(ret);
 		if (count++ % 1000 == 0) {
 			cout << "cout :" << count << endl;
 		}

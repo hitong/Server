@@ -32,10 +32,10 @@ int main() {
 				if (FD_ISSET(*it, &fd_read)) {
 					auto message = server.recvMessage(*it);
 					if (message) {
-						Message* m = (Message*)malloc(sizeof(Message) + 1024);
-						m->_size = 1024;
-						m->_cmd = MESSAGE;
-						server.sendMessage(m, *it);
+						unique_ptr<Message> uq_message{ (Message*)malloc(sizeof(Message) + 1024) };
+						uq_message->_size = 1024;
+						uq_message->_cmd = MESSAGE;
+						server.sendMessage(uq_message.get(), *it);
 						delete message;
 					}
 				}
