@@ -2,13 +2,16 @@
 #include <vector>
 
 using namespace std;
-
+class Test {
+	int a;
+};
 
 int main() {
-	vector<int> v{ 1,2,3 };
-	for (auto it = v.begin(); it < v.end(); it++) {
-		if (it == v) {
-
-		}
+	int count = 0;
+	while (true) {
+		Test* t = (Test*)malloc(102400);
+		delete t;
+		count++;
 	}
+	return 0;
 }

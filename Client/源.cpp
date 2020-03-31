@@ -19,9 +19,9 @@ int main() {
 			break;
 		}
 		free(ret);
-		if (count++ % 1000 == 0) {
-			cout << "cout :" << count << endl;
-		}
+	//	if (count++ % 1000 == 0) {
+			cout << "cout :" << count++ << endl;
+	//	}
 	}
 	client.closeConnect();
 	return 0;
