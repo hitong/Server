@@ -1,5 +1,5 @@
 #include "Client.h"
-const char* SERVER_IP = "127.0.0.1";
+const char* SERVER_IP = "121.89.196.10";
 const short SERVER_PORT = 12345;
 //const int CHCHE_SIZE = 10240;
 
@@ -26,34 +26,34 @@ int Client::sendMessage(Header* header)
 	return 0;
 }
 
-Message* Client::recvMessage()
+int Client::recvMessage(Header*& header)
 {
 	int nRead = recv(_sock, _chche, CHCHE_SIZE, 0);
 	if (nRead < 0) {
-		return nullptr;
+		return RECV_ERROR;
 	} 
 	if (nRead == 0) {
 		closeConnect();
-		return nullptr;
+		return RECV_CLOSE;
 	}
 	memcpy(_chche2 + _posLast,_chche,nRead);
 	_posLast += nRead;
 	if (_posLast < sizeof(Header)) {
-		return nullptr;
+		return RECV_CONTINUE;
 	}
-	Header* header = (Header*)_chche2;
-	if (header->_size + sizeof(Header) > _posLast) {
-		return nullptr;
+	Header* chche = (Header*)_chche2;
+	if (chche->_size + sizeof(Header) > _posLast) {
+		return RECV_CONTINUE;
 	}
 	//cout << header->_cmd << " " << header->_size << endl;
 	//if (header._cmd == MESSAGE) {
-	Message* uq_message = (Message*)malloc(sizeof(Message) + header->_size);
-	memcpy(uq_message, &_chche2, sizeof(Header) + header->_size);
-	_posLast -= sizeof(Header) + header->_size;
+	header = (Message*)malloc(sizeof(Message) + chche->_size);
+	memcpy(header, &_chche2, sizeof(Header) + chche->_size);
+	_posLast -= sizeof(Header) + chche->_size;
 	if (_posLast) {
-		memcpy(_chche2, _chche2+ sizeof(Header) + header->_size, _posLast);
+		memcpy(_chche2, _chche2+ sizeof(Header) + chche->_size, _posLast);
 	}
-	return uq_message;
+	return RECV_OK;
 	//}
 
 //	return nullptr;

@@ -37,7 +37,7 @@ int main() {
 						uq_message->_cmd = MESSAGE;
 						server.sendMessage(uq_message.get(), *it);
 						delete message;
-					}
+					} 
 				}
 			}
 			if (count++ % 1000 == 0) {

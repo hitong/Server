@@ -10,6 +10,13 @@
 extern const char* SERVER_IP;
 extern const short SERVER_PORT;
 const int CHCHE_SIZE = 10240;
+enum RECVSTATE {
+	RECV_CONTINUE,
+	RECV_CLOSE,
+	RECV_ACCEPT,
+	RECV_ERROR,
+	RECV_OK
+};
 class Client
 {
 public:
@@ -18,7 +25,7 @@ public:
 	int initSock() ;
 	int sendMessage(Header* header);
 
-	Message* recvMessage();
+	int recvMessage(Header*& header);
 
 	void closeConnect();
 	bool isRun() {return _sock != INVALID_SOCKET;}

@@ -1,14 +1,14 @@
 #include<iostream>
 #include <vector>
-
+#include <set>
 using namespace std;
 
 
 int main() {
-	vector<int> v{ 1,2,3 };
-	for (auto it = v.begin(); it < v.end(); it++) {
-		if (it == v) {
+	set<int> s{1,2,4,5,6,7,8,9};
+	for (int i = 0; i < s.size();i++) {
+		/*if (s[i]>) {
 
-		}
+		}*/
 	}
 }
