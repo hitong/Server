@@ -1,25 +1,55 @@
 #include<iostream>
 #include <vector>
 #include <set>
+#include <map>
 using namespace std;
 class Test {
 	int a;
 };
 
-int main() {
-<<<<<<< HEAD
-	set<int> s{1,2,4,5,6,7,8,9};
-	for (int i = 0; i < s.size();i++) {
-		/*if (s[i]>) {
-
-		}*/
-=======
-	int count = 0;
-	while (true) {
-		Test* t = (Test*)malloc(102400);
-		delete t;
-		count++;
->>>>>>> f1954d4e83267a50a37dcd6333b469624c370d59
+class A {
+	
+public:
+	int _num = 0;
+	A(int num) {
+		_num = num;
+		cout << "A "<< num << endl;
 	}
+	A(const A& a) {
+		cout << "复制构造" << endl;
+	}
+	A(const A&& a) {
+		_num = a._num;
+		cout << "移动构造" << endl;
+	}
+	A() {};
+	~A() {
+		cout << "~ A" << _num << endl;
+	}
+};
+
+int main()
+{
+	map<string, string> mapData;
+
+	mapData["a"] = "aaa";
+	mapData["b"] = "bbb";
+	mapData["c"] = "ccc";
+	mapData["d"] = "ddd";
+	mapData["e"] = "eee";
+	for (map<string, string>::iterator i = mapData.begin(); i != mapData.end(); i++)
+	{
+		if (i->first == "b" || i->first == "d")
+		{
+			mapData.erase(i--);
+		}
+	}
+
+	for (map<string, string>::iterator i = mapData.begin(); i != mapData.end(); i++)
+	{
+		cout << i->second << endl;
+	}
+	int tmp;
+	cin >> tmp;
 	return 0;
 }

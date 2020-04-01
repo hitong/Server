@@ -7,15 +7,25 @@
 #include <unistd.h>
 #include <algorithm>
 #include <arpa/inet.h>
-#include <vector>
+#include <map>
 extern const char* SERVER_IP;
 extern const short SERVER_PORT;
 const int INVALID_SOCKET = -1;
+
+enum RECVSTATE {
+	RECV_CONTINUE,
+	RECV_CLOSE,
+	RECV_ACCEPT,
+	RECV_ERROR,
+	RECV_OK
+};
+
 class Server
 {
 public:
 	int _sock = INVALID_SOCKET;
-	vector<int> _socks;
+	int maxSock = 0;
+	map<int,SockData> _socks;
 	Server() = default;
 
 	int initSock() {
@@ -26,14 +36,14 @@ public:
 		return connectSock();
 
 	};
-	int sendMessage(Header* header, int sock) {
+	int sendMessage(int sock, Header* header ) {
 		if (isRun() && sock != INVALID_SOCKET) {
 			send(sock, (const char*)header, sizeof(Header) + header->_size, 0);
 		}
 		return 0;
 	}
 
-	Message* recvMessage(int sock) {
+	int recvMessage(int sock,Header*& header) {
 		if (sock == _sock) {
 			sockaddr_in addr;
 			socklen_t sock_len = sizeof(sockaddr_in);
@@ -43,30 +53,41 @@ public:
 			}
 			char buf[17]{ 0 };
 			inet_ntop(AF_INET, &addr.sin_addr, buf, sizeof(buf));
-			printf("new client connect: %d,  %s\n", ntohs(addr.sin_port), buf);
-			_socks.push_back(sock_c);
-			return nullptr;
-		}
-		auto it = find(_socks.begin(), _socks.end(), sock);
-		if (it != _socks.end()) {
-			Header header;
-			int ret1 = recv(sock, (char*)&header, sizeof(header), 0);
-			Message* uq_message = (Message*)malloc(sizeof(Message) + header._size);
-			int ret2 = recv(sock, (char*)uq_message->data, header._size, 0);
-			if (ret1 <= 0 || ret2 <= 0) {
-				delete uq_message;
-				close(sock);
-				_socks.erase(it);
-				cout << "sock " << sock << " closed" << endl;
-			//	sleep(3);
-			}
-			else {
-				memcpy(uq_message, &header, sizeof(Header));
-				return uq_message;
-			}
+			_socks.erase(sock_c);
+			_socks.emplace(sock_c, SockData(buf, ntohs(addr.sin_port)));	
+			maxSock = max(maxSock, sock_c + 1);
+			return RECV_ACCEPT;
 		}
 
-		return nullptr;
+		if (_socks.find(sock) != _socks.end()) {
+			int len = recv(sock, _socks[sock]._chche1, CHCHE_SIZE, 0);
+			if (len == 0) {
+				close(sock);
+			//	_socks.erase(sock);
+				return RECV_CLOSE;
+			}
+			if (len < 0) {
+				return RECV_ERROR;
+			}
+			memcpy(_socks[sock]._chche2 + _socks[sock]._pos, _socks[sock]._chche1,len);
+			_socks[sock]._pos += len;
+			if (_socks[sock]._pos < sizeof(Header)) {
+				return RECV_CONTINUE;
+			}
+			Header* head = (Header*)_socks[sock]._chche2;
+			if (head->_size + sizeof(Header) > _socks[sock]._pos) {
+				return RECV_CONTINUE;
+			}
+			header = (Header*)malloc(sizeof(Header) + head->_size);
+			memcpy(header, head,head->_size + sizeof(Header));
+			if (head->_size + sizeof(Header) < _socks[sock]._pos) {
+				memcpy(head, head + head->_size + sizeof(Header), 
+					_socks[sock]._pos- head->_size + sizeof(Header));
+			}
+			_socks[sock]._pos -= head->_size + sizeof(Header);
+		}
+
+		return RECV_OK;
 	};
 
 	void closeConnect() {
@@ -88,10 +109,11 @@ private:
 		addr.sin_port = htons(SERVER_PORT);
 		bind(_sock, (const sockaddr*)&addr, sizeof(addr));
 		int res = listen(_sock, 5);
-		_socks.push_back(_sock);
 		if (INVALID_SOCKET == _sock) {
 			closeConnect();
 		}
+		_socks.emplace(_sock, SockData(SERVER_IP,SERVER_PORT));
+		maxSock = _sock + 1;
 		return _sock;
 	};
 };

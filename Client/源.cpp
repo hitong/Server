@@ -25,7 +25,7 @@ int main() {
 		//	cout << header->_cmd << endl;
 			delete header;
 			if (count++ % 10 == 0) {
-				cout << "cout :" << count << endl;
+				cout << "正确处理收发次数:" << count << endl;
 			}
 			unique_ptr<Message> uq_message{ (Message*)malloc(sizeof(Message) + 2048) };
 			uq_message->_size = 2048;

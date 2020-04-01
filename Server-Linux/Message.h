@@ -38,10 +38,43 @@ public:
 };
 
 const int CHCHE_SIZE = 1024;
-struct SockData {
-	int _pos = 0 ;
-	char* chche1 = new char[CHCHE_SIZE];
-	char* chche2 = new char[CHCHE_SIZE * 10];
-	char* ip = nullptr;
-	short port = -1;
+class SockData {
+public:
+	int _pos = 0;
+	char* _chche1 = nullptr;
+	char* _chche2 = nullptr;
+	char* _ip = nullptr;
+	short _port = -1;
+	SockData() = default;
+	SockData(const char* ip,const short port) {
+		_ip = new char[strlen(ip) + 1];
+		memcpy(_ip,ip,strlen(ip) + 1);
+		_port = port;
+		_chche1 = new char[CHCHE_SIZE];
+		_chche2 = new char[CHCHE_SIZE * 10];
+	}
+
+	SockData(const SockData&) = delete;
+	SockData& operator=(const SockData&) = delete;
+
+	SockData(SockData&& oth) {
+		_chche1 = oth._chche1;
+		_chche2 = oth._chche2;
+		_ip = oth._ip;
+		_port = oth._port;
+		_pos = oth._pos;
+
+		oth._chche1 = nullptr;
+		oth._chche2 = nullptr;
+		oth._ip = nullptr;
+		oth._port = -1;
+		oth._pos = 0;
+	}
+
+	~SockData() {
+		delete _ip;
+		delete[] _chche1;
+		delete[] _chche2;
+	}
+
 };
