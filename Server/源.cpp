@@ -40,9 +40,9 @@ int main() {
 					} 
 				}
 			}
-			if (count++ % 1000 == 0) {
-				cout << "cout :" << count << endl;
-			}
+			//if (count++ % 1000 == 0) {
+				cout << "cout :" << count++ << endl;
+		//	}
 		}
 	});
 	p.join();
