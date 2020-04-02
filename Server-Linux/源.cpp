@@ -9,7 +9,6 @@ using namespace std;
 
 const char* RECV = "recv";
 int main() {
-	cout << sizeof(Message) << endl;
 	fd_set fd_read, fd_write, fd_excp;
 	timeval t_val{ 100,0 };
 	Server server;
@@ -46,7 +45,7 @@ int main() {
 					server.sendMessage(it->first, uq_message.get());
 					delete header;
 					if (count++ % 10 == 0) {
-						cout << "正确处理收发次数:" << count << endl;
+						cout << "succcesful deal message :" << count << endl;
 					}
 				}
 				if (state == RECV_ACCEPT) {
