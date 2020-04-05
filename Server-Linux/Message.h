@@ -44,7 +44,7 @@ public:
 	char* _chche1 = nullptr;
 	char* _chche2 = nullptr;
 	char* _ip = nullptr;
-	short _port = -1;
+	ushort _port = -1;
 	SockData() = default;
 	SockData(const char* ip,const short port) {
 		_ip = new char[strlen(ip) + 1];

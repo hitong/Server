@@ -54,7 +54,7 @@ public:
 			char buf[17]{ 0 };
 			inet_ntop(AF_INET, &addr.sin_addr, buf, sizeof(buf));
 			_socks.erase(sock_c);
-			_socks.emplace(sock_c, SockData(buf, ntohs(addr.sin_port)));	
+			_socks.emplace(sock_c, SockData(buf, addr.sin_port));
 			maxSock = max(maxSock, sock_c + 1);
 			return RECV_ACCEPT;
 		}

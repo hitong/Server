@@ -2,54 +2,35 @@
 #include <vector>
 #include <set>
 #include <map>
+#include "a.pb.h"
+#include "addressbook.pb.h"
+
 using namespace std;
+
+#pragma comment(lib, "libprotobuf.lib")
+#pragma comment(lib, "libprotoc.lib")
+using namespace TestImport;
+using namespace tutorial;
+
 class Test {
-	int a;
+public:
+	string a  = "hello any";
 };
 
-class A {
-	
-public:
-	int _num = 0;
-	A(int num) {
-		_num = num;
-		cout << "A "<< num << endl;
-	}
-	A(const A& a) {
-		cout << "复制构造" << endl;
-	}
-	A(const A&& a) {
-		_num = a._num;
-		cout << "移动构造" << endl;
-	}
-	A() {};
-	~A() {
-		cout << "~ A" << _num << endl;
-	}
-};
 
 int main()
 {
-	map<string, string> mapData;
-
-	mapData["a"] = "aaa";
-	mapData["b"] = "bbb";
-	mapData["c"] = "ccc";
-	mapData["d"] = "ddd";
-	mapData["e"] = "eee";
-	for (map<string, string>::iterator i = mapData.begin(); i != mapData.end(); i++)
-	{
-		if (i->first == "b" || i->first == "d")
-		{
-			mapData.erase(i--);
-		}
-	}
-
-	for (map<string, string>::iterator i = mapData.begin(); i != mapData.end(); i++)
-	{
-		cout << i->second << endl;
-	}
-	int tmp;
-	cin >> tmp;
+	TestMessage tm;
+	string str;
+	Submessage sub;
+	sub.set_name("sub_name");
+	tm.add_rany()->PackFrom(sub);
+	tm.set_message("set message");
+	cout << tm.SerializePartialAsString() << endl;
+	/*Person* p = addr.add_people();
+	addr.GetCachedSize();
+	string str;
+	addr.AppendToString(&str);
+	cout << addr.GetCachedSize() << endl;*/
 	return 0;
 }

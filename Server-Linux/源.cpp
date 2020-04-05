@@ -2,17 +2,36 @@
 #include <string>
 #include <vector>
 //#include <thread>
+#include "hiredis/hiredis.h"
 #include "Server.h"
 #include <memory>
 
 using namespace std;
 
+#pragma(lib, "libhiredis")
+#define RedisTest
 const char* RECV = "recv";
 int main() {
+#ifdef RedisTest
+	
+	redisContext* context = redisConnect("127.0.0.1",6379);
+	redisReply* reply;
+	redisAppendCommand(context, "SET foo bar");
+	redisAppendCommand(context, "GET foo");
+	redisGetReply(context, (void**)&reply); // reply for SET
+	cout << reply->str << endl;
+	freeReplyObject(reply);
+	redisGetReply(context, (void**)&reply); // reply for GET
+	cout << reply->str << endl;
+	freeReplyObject(reply);
+	redisFree(context);
+#endif // RedisTest
+
+#ifdef SockServer
 	fd_set fd_read, fd_write, fd_excp;
 	timeval t_val{ 100,0 };
 	Server server;
-	server.initSock();
+	cout << server.initSock() << endl;
 	int count = 0;
 	Header* header;
 	int state = -1;
@@ -49,12 +68,12 @@ int main() {
 					}
 				}
 				if (state == RECV_ACCEPT) {
-					printf("new client connect: %d,  %s\n", server._socks[it->first]._port, 
+					printf("new client connect: %ud,  %s\n", server._socks[it->first]._port, 
 						server._socks[it->first]._ip);
 				}
 				if (state == RECV_CLOSE)
 				{
-					printf("close sock: %d %s\n", server._socks[it->first]._port,
+					printf("close sock: %d, %s\n", server._socks[it->first]._port,
 						server._socks[it->first]._ip);
 					server._socks.erase(it--);
 				}
@@ -64,5 +83,7 @@ int main() {
 	//	});
 	//p.join();
 	server.closeConnect();
+#endif // SockServer
+
 	return 0;
 }

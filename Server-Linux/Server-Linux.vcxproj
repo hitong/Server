@@ -86,6 +86,10 @@
     <ClCompile>
       <CppLanguageStandard>gnu++1y</CppLanguageStandard>
     </ClCompile>
+    <Link />
+    <Link>
+      <AdditionalOptions>-lhiredis  -I/usr/lib/hiredis/ %(AdditionalOptions)</AdditionalOptions>
+    </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
