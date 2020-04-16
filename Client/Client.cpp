@@ -1,5 +1,5 @@
 #include "Client.h"
-const char* SERVER_IP = "121.89.196.10";
+const char* SERVER_IP = "127.0.0.1";//121.89.196.10
 const short SERVER_PORT = 12345;
 //const int CHCHE_SIZE = 10240;
 

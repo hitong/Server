@@ -143,11 +143,13 @@
   <ItemGroup>
     <ClCompile Include="a.pb.cc" />
     <ClCompile Include="addressbook.pb.cc" />
+    <ClCompile Include="MemStream.cpp" />
     <ClCompile Include="源.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="a.pb.h" />
     <ClInclude Include="addressbook.pb.h" />
+    <ClInclude Include="MemStream.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

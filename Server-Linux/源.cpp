@@ -5,13 +5,22 @@
 #include "hiredis/hiredis.h"
 #include "Server.h"
 #include <memory>
-
+#include <unistd.h>
+#include <sys/epoll.h>
+#include <sys/socket.h>
 using namespace std;
 
 #pragma(lib, "libhiredis")
-#define RedisTest
+#define EpollTest
 const char* RECV = "recv";
 int main() {
+#ifdef EpollTest
+	//epoll_create();
+
+
+#endif // EpollTest
+
+
 #ifdef RedisTest
 	
 	redisContext* context = redisConnect("127.0.0.1",6379);

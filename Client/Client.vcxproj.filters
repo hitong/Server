@@ -21,6 +21,9 @@
     <ClCompile Include="Client.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Message.pb.cc">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -29,5 +32,11 @@
     <ClInclude Include="Message.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Message.pb.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Message.proto" />
   </ItemGroup>
 </Project>

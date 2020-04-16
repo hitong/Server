@@ -25,11 +25,18 @@ public:
 	int initSock() ;
 	int sendMessage(Header* header);
 
+	int sendSerializeStr(const string& str) {
+		if (isRun()) {
+			send(_sock, str.c_str(), str.size(), 0);
+		}
+		return 0;
+	}
+
 	int recvMessage(Header*& header);
 
 	void closeConnect();
 	bool isRun() {return _sock != INVALID_SOCKET;}
-
+	int sock() { return _sock; };
 private:
 	char _chche[CHCHE_SIZE]{0};//一级缓存
 	char _chche2[CHCHE_SIZE * 10]{0};//二级缓存

@@ -24,12 +24,18 @@
     <ClCompile Include="a.pb.cc">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="MemStream.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="addressbook.pb.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="a.pb.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MemStream.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
